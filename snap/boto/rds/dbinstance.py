@@ -42,7 +42,7 @@ class DBInstance(object):
         in status "available".
     :ivar instance_class: Contains the name of the compute and memory
         capacity class of the DB Instance.
-    :ivar master_username: The username that is set as master username
+    :ivar main_username: The username that is set as main username
         at creation time.
     :ivar parameter_groups: Provides the list of DB Parameter Groups
         applied to this DB Instance.
@@ -80,7 +80,7 @@ class DBInstance(object):
         self.allocated_storage = None
         self.endpoint = None
         self.instance_class = None
-        self.master_username = None
+        self.main_username = None
         self.parameter_groups = []
         self.security_groups = []
         self.read_replica_dbinstance_identifiers = []
@@ -134,8 +134,8 @@ class DBInstance(object):
             self.allocated_storage = int(value)
         elif name == 'DBInstanceClass':
             self.instance_class = value
-        elif name == 'MasterUsername':
-            self.master_username = value
+        elif name == 'MainUsername':
+            self.main_username = value
         elif name == 'Port':
             if self._in_endpoint:
                 self._port = int(value)
@@ -249,7 +249,7 @@ class DBInstance(object):
 
     def modify(self, param_group=None, security_groups=None,
                preferred_maintenance_window=None,
-               master_password=None, allocated_storage=None,
+               main_password=None, allocated_storage=None,
                instance_class=None,
                backup_retention_period=None,
                preferred_backup_window=None,
@@ -268,8 +268,8 @@ class DBInstance(object):
             UTC) during which maintenance can occur.  Default is
             Sun:05:00-Sun:09:00
 
-        :type master_password: str
-        :param master_password: Password of master user for the DBInstance.
+        :type main_password: str
+        :param main_password: Password of main user for the DBInstance.
             Must be 4-15 alphanumeric characters.
 
         :type allocated_storage: int
@@ -329,7 +329,7 @@ class DBInstance(object):
                                                  param_group,
                                                  security_groups,
                                                  preferred_maintenance_window,
-                                                 master_password,
+                                                 main_password,
                                                  allocated_storage,
                                                  instance_class,
                                                  backup_retention_period,

@@ -46,7 +46,7 @@ class Connection(object):
         if extra_args is not None:
             self.common_args += shlex.split(extra_args)
         else:
-            self.common_args += ["-o", "ControlMaster=auto",
+            self.common_args += ["-o", "ControlMain=auto",
                                  "-o", "ControlPersist=60s",
                                  "-o", "ControlPath=/tmp/ansible-ssh-%h-%p-%r"]
         self.common_args += ["-o", "StrictHostKeyChecking=no"]
@@ -101,10 +101,10 @@ class Connection(object):
         try:
             # Make sure stdin is a proper (pseudo) pty to avoid: tcgetattr errors
             import pty
-            master, slave = pty.openpty()
-            p = subprocess.Popen(ssh_cmd, stdin=slave,
+            main, subordinate = pty.openpty()
+            p = subprocess.Popen(ssh_cmd, stdin=subordinate,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            stdin = os.fdopen(master, 'w', 0)
+            stdin = os.fdopen(main, 'w', 0)
         except:
             p = subprocess.Popen(ssh_cmd, stdin=subprocess.PIPE,
                                  stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -130,7 +130,7 @@ class Connection(object):
             stdin.write(self.runner.sudo_pass + '\n')
             fcntl.fcntl(p.stdout, fcntl.F_SETFL, fcntl.fcntl(p.stdout, fcntl.F_GETFL) & ~os.O_NONBLOCK)
 
-        # We can't use p.communicate here because the ControlMaster may have stdout open as well
+        # We can't use p.communicate here because the ControlMain may have stdout open as well
         stdout = ''
         stderr = ''
         while True:
